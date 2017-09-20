@@ -1,0 +1,81 @@
+
+./app/Main.hs,52
+module Main Main0,1
+main main4,5
+main main5,6
+
+./Setup.hs,15
+main main1,2
+
+./src/GHCCompat.hs,889
+module GHCCompat GHCCompat1,2
+data TvSubst TvSubst54,55
+data TvSubst = TvSubst TvSubst54,55
+instance instance56,57
+emptyTvSubst emptyTvSubst59,60
+emptyTvSubst emptyTvSubst60,61
+toTCv toTCv63,64
+toTCv toTCv64,65
+substTy substTy66,67
+substTy substTy67,68
+unionTvSubst unionTvSubst69,70
+unionTvSubst unionTvSubst70,71
+fromTCv fromTCv72,73
+fromTCv fromTCv73,74
+promotedBoolTyCon promotedBoolTyCon75,76
+promotedBoolTyCon promotedBoolTyCon76,77
+viewFunTy viewFunTy78,79
+viewFunTy viewFunTy79,80
+pattern pattern86,87
+tcUnifyTy tcUnifyTy90,91
+tcUnifyTy tcUnifyTy91,92
+getEqTyCon getEqTyCon93,94
+getEqTyCon getEqTyCon94,95
+eqType eqType97,98
+eqType eqType98,99
+getEqTyCon getEqTyCon100,101
+getEqWitnessTyCon getEqWitnessTyCon106,107
+getEqWitnessTyCon getEqWitnessTyCon107,108
+decompFunTy decompFunTy111,112
+decompFunTy decompFunTy112,113
+
+./src/Type/Checkerz/Lookup.hs,299
+module Type.Checkerz.LookupType.Checkerz.Lookup0,1
+type PackageName PackageName7,8
+class (Monad m, MonadIO m) => MonadTcLookup MonadTcLookup10,11
+class (Monad m, MonadIO m) => MonadTcLookup MonadTcLookup10,11
+  findImportedModule findImportedModule11,12
+  lookupOrigin lookupOrigin14,15
+
+./src/Type/Checkerz.hs,917
+module Type.CheckerzType.Checkerz4,5
+type ConstrId ConstrId30,31
+newtype Simplifier Simplifier32,33
+  Simplifier Simplifier33,34
+  Simplifier { runSimplifier runSimplifier33,34
+data Constr Constr36,37
+data Constr a = Constr Constr36,37
+data Constr a = Constr { constrId constrId36,37
+                       , constraint constraint37,38
+instance instance40,41
+newtype Parser Parser48,49
+newtype Parser a = Parser Parser48,49
+newtype Parser a = Parser { runParser runParser48,49
+class IsConstraint IsConstraint54,55
+class IsConstraint IsConstraint54,55
+  fromCt fromCt55,56
+  toCt toCt56,57
+redundant redundant59,60
+redundant redundant60,61
+derived derived63,64
+derived derived64,65
+inaccessible inaccessible67,68
+inaccessible inaccessible68,69
+toSimplify toSimplify70,71
+toSimplify toSimplify75,76
+compilePlugin compilePlugin91,92
+compilePlugin compilePlugin94,95
+
+./test/Spec.hs,30
+main main0,1
+main main1,2
