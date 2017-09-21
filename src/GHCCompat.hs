@@ -1,57 +1,68 @@
-{-# LANGUAGE CPP, PatternGuards, PatternSynonyms, ViewPatterns #-}
-module GHCCompat (module GHC.Compat) where
-import FastString          as GHC.Compat (fsLit)
-import FastString          as GHC.Compat (FastString)
-import GHC.TcPluginM.Extra as GHC.Compat (evByFiat, lookupModule, lookupName,
-                                          tracePlugin)
-import GhcPlugins          as GHC.Compat (EqRel (..), PredTree (..))
-import GhcPlugins          as GHC.Compat (classifyPredType, isEqPred,
-                                          lookupTyCon, mkTyConTy)
-import GhcPlugins          as GHC.Compat (mkTcOcc, ppr, promotedFalseDataCon)
-import GhcPlugins          as GHC.Compat (promotedTrueDataCon, text)
-import GhcPlugins          as GHC.Compat (tyConAppTyCon_maybe, typeKind)
-import GhcPlugins          as GHC.Compat (TyCon, typeNatKind)
-import Module              as GHC.Compat (ModuleName, mkModuleName)
-import Module              as GHC.Compat (Module)
-import Name                as GHC.Compat (Name)
-import OccName             as GHC.Compat (OccName)
-import Plugins             as GHC.Compat (Plugin (..), defaultPlugin)
-import TcEvidence          as GHC.Compat (EvTerm)
-import TcPluginM           as GHC.Compat (FindResult (..), TcPluginM,
-                                          tcLookupTyCon, tcPluginIO,
-                                          tcPluginTrace)
-import TcRnMonad           as GHC.Compat (Ct, TcPluginResult (..), isWanted)
-import TcRnTypes           as GHC.Compat (TcPlugin (..), ctEvPred, ctEvidence)
-import TcTypeNats          as GHC.Compat
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 800
+{-# LANGUAGE CPP, DeriveDataTypeable, PatternGuards, PatternSynonyms #-}
+module GHCCompat (module GHCCompat) where
+import Coercion            as GHCCompat (coercionType)
+import FastString          as GHCCompat (fsLit)
+import FastString          as GHCCompat (FastString)
+import GHC.TcPluginM.Extra as GHCCompat (evByFiat, lookupModule, lookupName,
+                                         tracePlugin)
+import GhcPlugins          as GHCCompat (EqRel (..), PredTree (..))
+import GhcPlugins          as GHCCompat (classifyPredType, isEqPred, mkTyConTy)
+import GhcPlugins          as GHCCompat (mkTcOcc, ppr, promotedFalseDataCon)
+import GhcPlugins          as GHCCompat (promotedTrueDataCon, text)
+import GhcPlugins          as GHCCompat (tyConAppTyCon_maybe, typeKind)
+import GhcPlugins          as GHCCompat (TyCon, typeNatKind)
+import Module              as GHCCompat (ModuleName, mkModuleName)
+import Module              as GHCCompat (Module)
+import Name                as GHCCompat (Name)
+import OccName             as GHCCompat (OccName)
+import Plugins             as GHCCompat (Plugin (..), defaultPlugin)
+import TcEvidence          as GHCCompat (EvTerm)
+import TcPluginM           as GHCCompat (tcLookupTyCon)
+import TcPluginM           as GHCCompat (FindResult (..), TcPluginM,
+                                         tcLookupTyCon, tcPluginIO,
+                                         tcPluginTrace)
+import TcRnMonad           as GHCCompat (Ct, TcPluginResult (..), isWanted)
+import TcRnTypes           as GHCCompat (TcPlugin (..), ctEvPred, ctEvidence)
+import TcTypeNats          as GHCCompat
+import TyCon               as GHCCompat (tyConName)
+import Type                as GHCCompat (TyThing (..))
+#if __GLASGOW_HASKELL__ >= 800
 import           GhcPlugins (InScopeSet, Outputable, emptyUFM)
 import qualified PrelNames  as Old
-import           TyCoRep    as GHC.Compat (TyLit (NumTyLit), Type (..))
-import           Type       as GHC.Compat (TCvSubst (..), TvSubstEnv,
-                                           emptyTCvSubst)
-import           Type       as GHC.Compat (eqType, unionTCvSubst)
+import           TyCoRep    as GHCCompat (TyLit (NumTyLit, StrTyLit), Type (..))
+import           Type       as GHCCompat (TCvSubst (..), TvSubstEnv,
+                                          emptyTCvSubst)
+import           Type       as GHCCompat (eqType, unionTCvSubst)
 import qualified Type       as Old
-import qualified TysPrim    as Old
-import           TysWiredIn as GHC.Compat (boolTyCon)
+import           TysWiredIn as GHCCompat (boolTyCon)
 import           Unify      as Old (tcUnifyTy)
+#if __GLASGOW_HASKELL__ >= 802
+import Var as GHCCompat (ArgFlag (..), TyVarBndr (..))
 #else
-import Type       as GHC.Compat (TvSubst, emptyTvSubst)
-import Type       as GHC.Compat (substTy, unionTvSubst)
-import TypeRep    as GHC.Compat (TyLit (NumTyLit), Type (..))
+import TyCoRep as GHCCompat (TyBinder (..), VisibilityFlag (..))
+#endif
+#else
+import Data.Data  (Data)
+import Type       as GHCCompat (TvSubst, emptyTvSubst)
+import Type       as GHCCompat (substTy, unionTvSubst)
+import TypeRep    as GHCCompat (TyLit (NumTyLit, StrTyLit), Type (..))
 import TysWiredIn as Old (eqTyCon)
-import TysWiredIn as GHC.Compat (promotedBoolTyCon)
-import Unify      as GHC.Compat (tcUnifyTy)
+import TysWiredIn as GHCCompat (promotedBoolTyCon)
+import Unify      as GHCCompat (tcUnifyTy)
+import Var        (Var)
 #endif
 import TcPluginM (lookupOrig)
-import Type      as GHC.Compat (splitTyConApp_maybe)
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ < 802
-import Type as GHC.Compat (isVoidTy)
+import Type      as GHCCompat (splitTyConApp_maybe)
+#if __GLASGOW_HASKELL__ < 802
+import           Data.Data (Data)
+import           Type      as GHCCompat (isVoidTy)
+import qualified Var       as Var
 #else
-import RepType as GHC.Compat (isVoidTy)
+import RepType as GHCCompat (isVoidTy)
 #endif
-import Unique as GHC.Compat (getKey, getUnique)
+import Unique as GHCCompat (getKey, getUnique)
 
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 800
+#if __GLASGOW_HASKELL__ >= 800
 data TvSubst = TvSubst InScopeSet TvSubstEnv
 
 instance Outputable  TvSubst where
@@ -76,16 +87,9 @@ fromTCv (TCvSubst set tvsenv _) = TvSubst set tvsenv
 promotedBoolTyCon :: TyCon
 promotedBoolTyCon = boolTyCon
 
-viewFunTy :: Type -> Maybe (Type, Type)
-viewFunTy t@(TyConApp _ [t1, t2])
-  | Old.isFunTy t = Just (t1, t2)
-viewFunTy _ = Nothing
-
-#if defined(__GLASGOW_HASKELL__) && __GLASGOW_HASKELL__ >= 802
-#else
+#if __GLASGOW_HASKELL__ == 800
 pattern FunTy :: Type -> Type -> Type
-pattern FunTy t1 t2 <- (viewFunTy -> Just (t1, t2)) where
-  FunTy t1 t2 = Old.mkFunTy t1 t2
+pattern FunTy t1 t2 = ForAllTy (Anon t1) t2
 #endif
 
 tcUnifyTy :: Type -> Type -> Maybe TvSubst
@@ -100,7 +104,17 @@ eqType = (==)
 
 getEqTyCon :: TcPluginM TyCon
 getEqTyCon = return Old.eqTyCon
+#endif
 
+#if __GLASGOW_HASKELL__ < 802
+type TyVar = Var.Var
+data TyVarBndr tyvar argf = TvBndr tyvar argf
+                          deriving (Data)
+#if __GLASGOW_HASKELL__ < 800
+data ArgFlag = Required	| Specified	| Inferred
+             deriving (Eq, Data)
+type TyVarBinder = TyVarBndr TyVar ArgFlag
+#endif
 #endif
 
 
@@ -108,7 +122,3 @@ getEqWitnessTyCon :: TcPluginM TyCon
 getEqWitnessTyCon = do
   md <- lookupModule (mkModuleName "Data.Type.Equality") (fsLit "base")
   tcLookupTyCon =<< lookupOrig md (mkTcOcc ":~:")
-
-decompFunTy :: Type -> [Type]
-decompFunTy (FunTy t1 t2) = t1 : decompFunTy t2
-decompFunTy t             = [t]

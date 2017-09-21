@@ -13,4 +13,4 @@ class (Monad m, MonadIO m) => MonadTcLookup m where
                      -> Maybe PackageName
                      -> m FindResult
   lookupOrigin :: Module -> OccName -> m Name
-
+  lookupGlobal :: Name -> m TyThing
